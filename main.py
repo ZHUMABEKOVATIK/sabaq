@@ -10,3 +10,13 @@
 # Set - set - {5, 6, 7}
 # Dictionary - dict - {'key1': 'value1', 'key2': 'value2'}
 
+class MyClass:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def plus(self):
+        return self.a + self.b
+    
+    def minus(self):
+        return self.a - self.b
