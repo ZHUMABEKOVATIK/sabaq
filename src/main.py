@@ -66,8 +66,9 @@ async def delete_data(id: int) -> None:
 
 
 async def main():
-    data = await update_db(2, name="Bob", phone="65465465")
-    print(data.id, data.name, data.phone)
+    data = await get_all()
+    for i in data:
+        print(i.id, i.name)
 
 
 

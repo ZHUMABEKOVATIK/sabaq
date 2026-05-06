@@ -5,8 +5,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from .base import Base
 from .models import User
-
-DB_URL = "postgresql+asyncpg://postgres:2106@localhost/sabaq"
+from .config import DB_URL
 
 engine = create_async_engine(DB_URL, echo=True)
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)

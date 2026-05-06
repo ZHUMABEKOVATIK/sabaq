@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import BigInteger, String
+from sqlalchemy import BigInteger, String, Boolean
 from .base import Base
 
 
@@ -14,3 +14,4 @@ class User(Base):
     )
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     phone: Mapped[str | None] = mapped_column(String, nullable=True)
+    is_delete: Mapped[bool] = mapped_column(Boolean, default=False)
