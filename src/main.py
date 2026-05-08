@@ -1,74 +1,32 @@
-from .db import async_session
-from .models import User
+from .db.sessions import async_main
 
-from sqlalchemy import select, update, text
+from src.repositories.users import UserRepo
+from src.repositories.orders import OrdersRepo
 
-async def create(name: str, phone: str | None = None) -> User:
-    async with async_session() as session:
-        try:
-            user = User(name=name, phone=phone)
-            session.add(user)
-            await session.commit()
-            return user
-        except Exception as err:
-            await session.rollback()
-            raise
 
-async def get_all() -> list[User]:
-    async with async_session() as session:
-        return (await session.execute(select(User))).scalars().all()
-    
-async def get_by_id(id: int) -> User | None:
-    async with async_session() as session:
-        return (await session.execute(
-            select(User)
-            .where(User.id == id)
-        )).scalar_one_or_none()
 
-# Update 1
-async def update_data(id: int, name: str, phone: str) -> bool:
-    async with async_session() as session:
-        data = await session.execute(update(User).values(name=name, phone=phone).where(User.id == id))
-        await session.commit()
-        return data.rowcount > 0
-
-# Update 2
-async def update_db(id: int, *, name: str | None = None, phone: str | None = None) -> User:
-    async with async_session() as session:
-        data = (await session.execute(
-            select(User)
-            .where(User.id == id)
-        )).scalar_one_or_none()
-
-        if data is None:
-            raise Exception("Bunday id g'a ten' user joq")
-
-        if name is not None:
-            data.name = name
-
-        if phone is not None:
-            data.phone = phone
-
-        await session.commit()
-        return data
-
-async def delete_data(id: int) -> None:
-    async with async_session() as session:
-        data = (await session.execute(
-            select(User)
-            .where(User.id == id)
-        )).scalar_one_or_none()
-
-        if data is None:
-            raise Exception("Bunday id g'a ten' user joq")
-        
-        await session.delete(data)
 
 
 async def main():
-    data = await get_all()
-    for i in data:
-        print(i.id, i.name)
+    await async_main()
+    u = UserRepo()
+
+    data = await u.get_by_id(2)
+    user = {
+        'id': data.id,
+        'name': data.name,
+    }
+    orders = []
+    for i in data.orders:
+        orders.append({
+            'id': i.id,
+            'name': i.name
+        })
+    user['orders'] = orders
+    print(user)
+    # o = OrdersRepo()
+    # await o.create(2, 'Strawberry')
+
 
 
 
@@ -82,3 +40,23 @@ async def main():
 
 import asyncio
 asyncio.run(main())
+
+
+{
+    'id': 1, 
+    'name': 'John', 
+    'orders': [
+        {
+            'id': 1, 
+            'name': 'Tomato'
+        }, 
+        {
+            'id': 2, 
+            'name': 'Potato'
+        }, 
+        {
+            'id': 3, 
+            'name': 'Cucumber'
+        }
+    ]
+}

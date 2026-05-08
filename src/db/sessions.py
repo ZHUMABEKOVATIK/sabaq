@@ -3,11 +3,12 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker, 
     AsyncSession
 )
-from .base import Base
-from .models import User
-from .config import DB_URL
+from src.db.base import Base
+from src.models.users import User
+from src.models.orders import Order
+from ..config import DB_URL
 
-engine = create_async_engine(DB_URL, echo=True)
+engine = create_async_engine(DB_URL, echo=False)
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 async def async_main():

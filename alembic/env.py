@@ -5,8 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from src.base import Base
-from src.models import User
+from src.db.base import Base
+from src.models import User, Order
 from src.config import DB_URL_2
 
 config = context.config
